@@ -83,13 +83,21 @@ jobs:
 
   "macOS-Tests":
     runs-on: macOS-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        xcodes:
+        - 11.2
+        - 12
+        - 12.1
+        - 12.2
     steps:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Show all Xcode versions
       run: ls -an /Applications/ | grep Xcode*
     - name: Change Xcode command line tools
-      run: sudo xcode-select -s /Applications/Xcode_11.2.app/Contents/Developer
+      run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcodes }}.app/Contents/Developer
     - name: SPM Build
       run: swift build
     - name: SPM Tests
@@ -103,8 +111,20 @@ jobs:
 
   "macOS-Performance-Tests":
     runs-on: macOS-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        xcodes:
+        - 11.2
+        - 12
+        - 12.1
+        - 12.2
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    - name: Show all Xcode versions
+      run: ls -an /Applications/ | grep Xcode*
+    - name: Change Xcode command line tools
+      run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcodes }}.app/Contents/Developer
     - name: Build & run
       run: swift run -c release
